@@ -1,0 +1,44 @@
+#include<iostream>
+#include<fstream>
+using namespace std;
+void cre_op_wri()
+{
+    fstream file2;
+    file2.open("File2",ios::out);
+    if(!file2)
+    {
+        cout<<"Couldn't Create file"<<endl;
+    }
+    else
+    {
+        cout<<"File Created"<<endl;
+        file2<<"FOS Practical"<<endl;
+    }
+    file2.close();
+}
+void read()
+{
+    fstream file3;
+    file3.open("File3.txt",ios::in);
+    if(!file3)
+    {
+        cout<<"Couldn't create file"<<endl;
+    }
+    else
+    {
+     string str;
+     while(1)
+     {
+         file3>>str;
+         if(file3.eof())
+            break;
+        cout<<str;
+     }
+    }
+    file3.close();
+}
+int main()
+{
+    cre_op_wri();
+    read();
+}
