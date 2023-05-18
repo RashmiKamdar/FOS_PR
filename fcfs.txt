@@ -1,0 +1,59 @@
+#include<iostream>
+using namespace std;
+
+void swap(int *a, int *b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+int main() {
+    int n;
+    cout << "Enter the number of processes: ";
+    cin >> n;
+
+    int p[n], art[n], bt[n], wt[n], tat[n], et[n], scale = 0;
+    float awt = 0, atat = 0;
+
+    cout << "Enter the arrival time and burst time of each process:\n";
+    for (int i = 0; i < n; i++) {
+        cout << "Process " << i + 1 << ": ";
+        cin >> art[i] >> bt[i];
+        p[i] = i + 1;
+    }
+
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            if (art[i] < art[j]) {
+                swap(&art[i], &art[j]);
+                swap(&bt[i], &bt[j]);
+                swap(&p[i], &p[j]);
+            }
+        }
+    }
+
+    wt[0] = 0;
+    for (int i = 1; i < n; i++) {
+        scale += bt[i - 1];
+        wt[i] = scale - art[i];
+        awt += wt[i];
+    }
+
+    for (int i = 0; i < n; i++) {
+        tat[i] = bt[i] + wt[i];
+        atat += tat[i];
+    }
+
+    awt /= n;
+    atat /= n;
+
+    cout << "Process\tArrival Time\tBurst Time\tWaiting Time\tTurnaround Time\n";
+    for (int i = 0; i < n; i++) {
+        cout << "P " << p[i] << "\t\t" << art[i] << "\t\t" << bt[i] << "\t\t" << wt[i] << "\t\t" << tat[i] << "\n";
+    }
+
+    cout << "Average Waiting Time = " << awt << endl;
+    cout << "Average Turnaround Time = " << atat << endl;
+
+    return 0;
+}

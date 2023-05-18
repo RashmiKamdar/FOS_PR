@@ -1,0 +1,84 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+struct Process {
+    int id;
+    int arrivalTime;
+    int burstTime;
+    int remainingTime;
+    int turnaroundTime;
+    int waitingTime;
+};
+
+void roundRobinScheduling(vector<Process>& processes, int timeQuantum) {
+    int n = processes.size();
+    int currentTime = 0;
+    bool isCompleted = false;
+
+    while (!isCompleted) {
+        isCompleted = true;
+        for (int i = 0; i < n; i++) {
+            if (processes[i].remainingTime > 0) {
+                isCompleted = false;
+                if (processes[i].remainingTime > timeQuantum) {
+                    currentTime += timeQuantum;
+                    processes[i].remainingTime -= timeQuantum;
+                } else {
+                    currentTime += processes[i].remainingTime;
+                    processes[i].remainingTime = 0;
+                    processes[i].turnaroundTime = currentTime - processes[i].arrivalTime;
+                    processes[i].waitingTime = processes[i].turnaroundTime - processes[i].burstTime;
+                }
+            }
+        }
+    }
+}
+
+int main() {
+    int n;
+    cout << "Enter the number of processes: ";
+    cin >> n;
+
+    vector<Process> processes(n);
+
+    for (int i = 0; i < n; i++) {
+        cout << "Process " << i + 1 << ":" << endl;
+        cout << "Enter arrival time: ";
+        cin >> processes[i].arrivalTime;
+
+        cout << "Enter burst time: ";
+        cin >> processes[i].burstTime;
+
+        processes[i].id = i + 1;
+        processes[i].remainingTime = processes[i].burstTime;
+    }
+
+    int timeQuantum;
+    cout << "Enter time quantum: ";
+    cin >> timeQuantum;
+
+    roundRobinScheduling(processes, timeQuantum);
+
+    cout << "Process\tArrival Time\tBurst Time\tTurnaround Time\tWaiting Time" << endl;
+    double totalTurnaroundTime = 0;
+    double totalWaitingTime = 0;
+
+    for (int i = 0; i < n; i++) {
+        cout << processes[i].id << "\t" << processes[i].arrivalTime << "\t\t"
+             << processes[i].burstTime << "\t\t" << processes[i].turnaroundTime << "\t\t"
+             << processes[i].waitingTime << endl;
+
+        totalTurnaroundTime += processes[i].turnaroundTime;
+        totalWaitingTime += processes[i].waitingTime;
+    }
+
+    double averageTurnaroundTime = totalTurnaroundTime / n;
+    double averageWaitingTime = totalWaitingTime / n;
+
+    cout << "Average Turnaround Time: " << averageTurnaroundTime << endl;
+    cout << "Average Waiting Time: " << averageWaitingTime << endl;
+
+    return 0;
+}

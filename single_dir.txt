@@ -1,0 +1,31 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <sys/stat.h>
+using namespace std;
+int main()
+{
+    string dir_path = "MyDirectory";
+    string file_path = dir_path + "/file1.txt";
+    // create directory
+    if (mkdir(dir_path.c_str()) == -1)
+        {
+            cerr << "Error: Cannot create directory." << endl;
+            exit(EXIT_FAILURE);
+        }
+        // create file
+        ofstream file(file_path);
+        file << "This is file1.txt\n";
+        file.close();
+        cout << "Directory and file created successfully." << endl;
+        // read directory
+        ifstream dir(dir_path);
+        string file_name;
+        cout << "Files in the directory:" << endl;
+        while (dir >> file_name)
+            {
+                cout << file_name << endl;
+            }
+            dir.close();
+            return 0;
+            }
